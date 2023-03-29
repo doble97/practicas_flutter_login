@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:login_final/pages/registered_user/user_in_page.dart';
+import 'package:provider/provider.dart';
 import 'package:login_final/pages/main_page.dart';
+import 'package:login_final/provider/user_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => UserProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +29,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MainPage(title: 'Inicio'),
+      home: Consumer<UserProvider>(builder: (context, userProvider, _) {
+        if (userProvider.isLoged) {
+          return RegisteredUserPage();
+        } else {
+          return MainPage();
+        }
+      }),
     );
   }
 }

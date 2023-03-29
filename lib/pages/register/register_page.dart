@@ -5,11 +5,13 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:login_final/models/login_model.dart';
 import 'package:login_final/models/user_model.dart';
 import 'package:login_final/pages/registered_user/user_in_page.dart';
+import 'package:login_final/provider/user_provider.dart';
 import 'package:login_final/services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
-
+  final Function(UserModel) onCallback;
+  const RegisterPage({super.key, required this.onCallback});
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -91,7 +93,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: () => {_submitForm()},
+                        onPressed: () {
+                          _submitForm();
+                        },
                         child: Text('Register'),
                       ),
                       ElevatedButton(
@@ -115,6 +119,8 @@ class _RegisterPageState extends State<RegisterPage> {
       final services = UserService();
       try {
         UserModel login = await services.register(user);
+        print('LLamando al provider');
+        widget.onCallback(login);
         // Navigator.of(context).push(MaterialPageRoute(
         //     builder: (context) => const RegisteredUserPage()));
         Navigator.pushReplacement(context,
