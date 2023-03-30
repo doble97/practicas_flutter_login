@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_final/models/user_model.dart';
+import 'package:login_final/pages/login/login_page.dart';
 import 'package:login_final/pages/register/register_page.dart';
 import 'package:login_final/pages/registered_user/user_in_page.dart';
 import 'package:login_final/provider/user_provider.dart';
@@ -10,30 +11,12 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(
-      builder: (context, userProvider, _) {
-        if (userProvider.isLoged) {
-          print('Consumer .... if');
-          return RegisteredUserPage();
-        } else {
-          print('Consumer .... else');
-
-          return NotRegisteredWidget(
-            title: 'Register',
-            onChangeState: (UserModel user) {
-              userProvider.login(user);
-            },
-          );
-        }
-      },
-    );
+    return NotRegisteredWidget(title: 'Main');
   }
 }
 
 class NotRegisteredWidget extends StatelessWidget {
-  final Function(UserModel user) onChangeState;
-  const NotRegisteredWidget(
-      {super.key, required this.title, required this.onChangeState});
+  const NotRegisteredWidget({super.key, required this.title});
 
   final String title;
 
@@ -57,13 +40,15 @@ class NotRegisteredWidget extends StatelessWidget {
                     //           onCallback: (UserModel user){onChangeState(user)},
                     //         )));
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            RegisterPage(onCallback: (UserModel user) {
-                              onChangeState(user);
-                            })));
+                        builder: (context) => RegisterPage()));
                   },
                   child: Text('Register')),
-              ElevatedButton(onPressed: null, child: Text('Login')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const LoginPage()));
+                  },
+                  child: Text('Login')),
             ],
           ),
         ),

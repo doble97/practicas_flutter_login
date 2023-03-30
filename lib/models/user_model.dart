@@ -1,6 +1,6 @@
 class UserModel {
   final int? id;
-  final String username;
+  final String? username;
   final String email;
   final String password;
   const UserModel(
@@ -19,7 +19,7 @@ class UserModel {
     return {
       'id': id,
       'username': username,
-      'email': username,
+      'email': email,
       'password': password
     };
   }

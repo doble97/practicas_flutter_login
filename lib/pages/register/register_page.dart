@@ -10,8 +10,7 @@ import 'package:login_final/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  final Function(UserModel) onCallback;
-  const RegisterPage({super.key, required this.onCallback});
+  const RegisterPage({super.key});
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -25,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register user'),
+        title: Text('Sign up'),
       ),
       body: Container(
         child: Center(
@@ -94,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          _submitForm();
+                          _submitForm(context);
                         },
                         child: Text('Register'),
                       ),
@@ -111,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<void> _submitForm() async {
+  Future<void> _submitForm(BuildContext ctx) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       UserModel user = UserModel(
@@ -120,26 +119,30 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         UserModel login = await services.register(user);
         print('LLamando al provider');
-        widget.onCallback(login);
+        UserProvider userProvider =
+            Provider.of<UserProvider>(context, listen: false);
+        userProvider.login(login);
         // Navigator.of(context).push(MaterialPageRoute(
         //     builder: (context) => const RegisteredUserPage()));
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => RegisteredUserPage()));
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (context) => RegisteredUserPage()));
+        Navigator.pop(ctx);
       } catch (e) {
         print('Error al hacer la llamada $e');
         print(e.toString());
+        // _showCupertinoSimpleDialog(e.toString());
         _showSimpleDialog(e.toString());
       }
     }
   }
 
-  void _showCupertinoSimpleDialog() {
-    showDialog(
+  Future<void> _showCupertinoSimpleDialog(String msg) {
+    return showDialog(
         context: context,
         builder: (context) {
           return CupertinoAlertDialog(
-            title: Text('Cupertino Dialog'),
-            content: Text('Hey! I am Coflutter!'),
+            title: Text('Error en la peticion'),
+            content: Text('Mensaje del error $msg'),
             actions: <Widget>[
               TextButton(
                   onPressed: () {
@@ -151,13 +154,14 @@ class _RegisterPageState extends State<RegisterPage> {
         });
   }
 
-  void _showSimpleDialog(String message) {
-    showDialog(
+  Future<void> _showSimpleDialog(String message) {
+    return showDialog(
         context: context,
         builder: (context) {
-          return SimpleDialog(
-            title: Text(message),
-            children: <Widget>[
+          return AlertDialog(
+            title: Text('Error en la peticion'),
+            content: Text('Mensaje del error $message'),
+            actions: <Widget>[
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

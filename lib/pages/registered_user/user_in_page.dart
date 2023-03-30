@@ -25,8 +25,8 @@ class RegisteredUserPage extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     context.read<UserProvider>().logout();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => MainPage()));
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(builder: (context) => MainPage()));
                   },
                   child: Text('Volver'))
             ],

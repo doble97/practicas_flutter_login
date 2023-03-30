@@ -31,8 +31,10 @@ class MyApp extends StatelessWidget {
       ),
       home: Consumer<UserProvider>(builder: (context, userProvider, _) {
         if (userProvider.isLoged) {
+          print('consumer...if');
           return RegisteredUserPage();
         } else {
+          print('consumer...else');
           return MainPage();
         }
       }),
